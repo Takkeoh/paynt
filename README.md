@@ -10,7 +10,7 @@
 
 ## Tech
 
-Dillinger uses a number of open source projects to work properly:
+Paynt uses a number of open source projects to work properly:
 
 - [GTK+] - GTK is a free and open-source cross-platform widget toolkit for creating graphical user interfaces (GUIs).
 - [Glade] - Glade is a RAD tool that enables quick and easy development of user interfaces for the GTK toolkit and the GNOME desktop environment.
