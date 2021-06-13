@@ -26,7 +26,7 @@ int if_square = 0;
 
 int if_circle = 0;
 
-int tab[] = {0,0,0,0};
+int tab[] = {-1,-1,-1,-1};
 
 double line_size = 2.0;
 
@@ -184,12 +184,12 @@ gboolean button_press_event_cb (GtkWidget *widget, GdkEventButton *event, gpoint
       
       if (if_line == 1)
 	{
-	  if (tab[0] == 0)
+	  if (tab[0] == -1)
 	    {
 	      tab[0] = start->x;
 	      tab[1] = start->y;
 	    }
-	  else if (tab[2] == 0)
+	  else if (tab[2] == -1)
 	    {
 	      tab[2] = start->x;
 	      tab[3] = start->y;
@@ -198,21 +198,21 @@ gboolean button_press_event_cb (GtkWidget *widget, GdkEventButton *event, gpoint
 	      end->x = tab[2];
 	      end->y = tab[3];
 	      draw_line (widget, start, end, layers[current_layer].surface);
-	      tab[0] = 0;
-	      tab[1] = 0;
-	      tab[2] = 0;
-	      tab[3] = 0;
+	      tab[0] = -1;
+	      tab[1] = -1;
+	      tab[2] = -1;
+	      tab[3] = -1;
 	    }
 	}
 
       if (if_square == 1)
 	{
-	  if (tab[0] == 0)
+	  if (tab[0] == -1)
 	    {
 	      tab[0] = start->x;
 	      tab[1] = start->y;
 	    }
-	  else if (tab[2] == 0)
+	  else if (tab[2] == -1)
 	    {
 	      tab[2] = start->x;
 	      tab[3] = start->y;
@@ -245,10 +245,10 @@ gboolean button_press_event_cb (GtkWidget *widget, GdkEventButton *event, gpoint
 	      end->y = tab[3];
 	      draw_line (widget, start, end, layers[current_layer].surface);
 	      
-	      tab[0] = 0;
-	      tab[1] = 0;
-	      tab[2] = 0;
-	      tab[3] = 0;
+	      tab[0] = -1;
+	      tab[1] = -1;
+	      tab[2] = -1;
+	      tab[3] = -1;
 	    }
 	}
 
@@ -385,7 +385,7 @@ void on_save(GtkWidget *widget, GdkEventConfigure *event, gpointer data)
   cairo_t *cr = cairo_create(img);
 
   //Initialize the image to black transparent
-  cairo_set_source_rgba(cr, 1,1,1, 1);
+  cairo_set_source_surface(cr, layers[3].surface, 0, 0);
   cairo_paint(cr);
 
   //Paint one image

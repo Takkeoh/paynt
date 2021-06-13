@@ -5,6 +5,7 @@
 #include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "tools.h"
+#include "err.h"
 
 GtkWidget *window;
 GtkWidget *drawing_area0;
@@ -29,6 +30,7 @@ GtkWidget *blueScale;
 GtkWidget *op_scale1;
 GtkWidget *size;
 GtkWidget *cur_layer;
+char* filepath;
 
 int one = 1;
 int two = 2;
@@ -100,19 +102,26 @@ gboolean configure_event_cb (GtkWidget *widget, GdkEventConfigure *event, gpoint
   if (*nb == 1)
     {
       
-      layers[3].surface = gdk_window_create_similar_surface (gtk_widget_get_window (widget),
-							     CAIRO_CONTENT_COLOR,
-							     gtk_widget_get_allocated_width (widget),
-							     gtk_widget_get_allocated_height (widget));
-      /* Initialize the surface to white */
-      cairo_t *cr;
+      if (filepath != NULL)
+	{
+	  layers[3].surface = cairo_image_surface_create_from_png(filepath);
+	}
+      else
+	{
+	  layers[3].surface = gdk_window_create_similar_surface (gtk_widget_get_window (widget),
+								 CAIRO_CONTENT_COLOR,
+								 gtk_widget_get_allocated_width (widget),
+								 gtk_widget_get_allocated_height (widget));
+	  /* Initialize the surface to white */
+	  cairo_t *cr;
 
-      cr = cairo_create (layers[3].surface);
+	  cr = cairo_create (layers[3].surface);
 
-      cairo_set_source_rgb (cr, 1,1,1);
-      cairo_paint (cr);
+	  cairo_set_source_rgb (cr, 1,1,1);
+	  cairo_paint (cr);
 
-      cairo_destroy (cr);
+	  cairo_destroy (cr);
+	}
     }
   if (*nb == 2)
     {
@@ -213,6 +222,14 @@ int main (int argc,char **argv)
   layers[3].drawing_area = drawing_area0;
   
   gtk_range_set_value(GTK_RANGE(size), 20);
+
+  
+  if (argc > 2)
+    errx(EXIT_FAILURE, "Too many arguments");
+  if (argc == 2)
+    filepath = argv[1];
+  else
+    filepath = NULL;
   
   /* Signals used to handle the backing surface */
   g_signal_connect (drawing_area1, "draw",
@@ -235,6 +252,7 @@ int main (int argc,char **argv)
 
   g_signal_connect (preview, "draw",
                     G_CALLBACK (draw_cbprev), NULL);
+
   g_signal_connect (preview, "configure-event",
 		    G_CALLBACK (configure_event_cbprev), NULL);
 
